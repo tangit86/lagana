@@ -1,0 +1,669 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- description: Generated server url
+  url: http://localhost:3333
+paths:
+  /api/conf:
+    get:
+      operationId: get
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConfigurationOverview'
+          description: default response
+      tags:
+      - api-controller
+    post:
+      operationId: setConf
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurationOverview'
+      responses:
+        "200":
+          description: default response
+      tags:
+      - api-controller
+  /api/feeder/{feeder}/start:
+    get:
+      operationId: start
+      parameters:
+      - explode: false
+        in: path
+        name: feeder
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: default response
+      tags:
+      - api-controller
+  /api/feeder/{feeder}/stop:
+    get:
+      operationId: stop
+      parameters:
+      - explode: false
+        in: path
+        name: feeder
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: default response
+      tags:
+      - api-controller
+  /api/fetch:
+    post:
+      operationId: fetch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FetchRequest'
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FetchResponse'
+          description: default response
+      tags:
+      - api-controller
+  /api/fetch/schema:
+    get:
+      operationId: fetchSchema
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/ILaganaFieldOut'
+                type: array
+          description: default response
+      tags:
+      - api-controller
+  /api/fetch/suggestions/{fieldId}:
+    get:
+      operationId: fetchFieldSuggestions
+      parameters:
+      - explode: false
+        in: path
+        name: fieldId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  type: object
+                type: array
+          description: default response
+      tags:
+      - api-controller
+  /api/dashboards:
+    get:
+      operationId: getDashboards
+      parameters:
+      - explode: true
+        in: query
+        name: dashboardNames
+        required: true
+        schema:
+          items:
+            type: string
+          type: array
+          uniqueItems: true
+        style: form
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/Dashboard'
+                type: array
+          description: default response
+      tags:
+      - api-controller
+  /api/feeder:
+    get:
+      operationId: getOverview
+      parameters:
+      - explode: true
+        in: query
+        name: feeders
+        required: true
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/IFeederOverview'
+                type: array
+          description: default response
+      tags:
+      - api-controller
+components:
+  schemas:
+    ConfigurationOverview:
+      example:
+        allowedTypeOpMap:
+          key:
+          - EQ
+          - EQ
+        reapSchema:
+          matchers:
+          - multilineAndinvert: true
+            allOf:
+            - null
+            - null
+            regex: regex
+            field: field
+            formatMatchValue: formatMatchValue
+            defaultMatchValue: defaultMatchValue
+            name: name
+            anyOf:
+            - null
+            - null
+          - multilineAndinvert: true
+            allOf:
+            - null
+            - null
+            regex: regex
+            field: field
+            formatMatchValue: formatMatchValue
+            defaultMatchValue: defaultMatchValue
+            name: name
+            anyOf:
+            - null
+            - null
+          readers:
+          - series: series
+            name: name
+            format: TEXT
+            type: CONSOLE_STREAM
+          - series: series
+            name: name
+            format: TEXT
+            type: CONSOLE_STREAM
+          feeders:
+          - reader: reader
+            name: name
+            description: description
+            isRegistered: true
+            matcher: matcher
+            targetSystem: targetSystem
+          - reader: reader
+            name: name
+            description: description
+            isRegistered: true
+            matcher: matcher
+            targetSystem: targetSystem
+          fields:
+          - name: name
+            isIndex: true
+            isSorted: true
+            type: STRING
+          - name: name
+            isIndex: true
+            isSorted: true
+            type: STRING
+      properties:
+        reapSchema:
+          $ref: '#/components/schemas/ReapSchema'
+        allowedTypeOpMap:
+          additionalProperties:
+            items:
+              enum:
+              - EQ
+              - NOTEQ
+              - CONTAINS
+              - NOTCONTAINS
+              - IN
+              - NOTIN
+              - EMPTY
+              - NOTEMPTY
+              - LT
+              - GT
+              - BETWEEN
+              - REGEX
+              type: string
+            type: array
+          type: object
+      type: object
+    FeederSchema:
+      example:
+        reader: reader
+        name: name
+        description: description
+        isRegistered: true
+        matcher: matcher
+        targetSystem: targetSystem
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        targetSystem:
+          type: string
+        reader:
+          type: string
+        matcher:
+          type: string
+        isRegistered:
+          type: boolean
+      type: object
+    FieldSchema:
+      example:
+        name: name
+        isIndex: true
+        isSorted: true
+        type: STRING
+      properties:
+        name:
+          type: string
+        type:
+          enum:
+          - STRING
+          - NUMERIC
+          - BOOLEAN
+          - TIMESTAMP
+          - XML
+          - JSON
+          type: string
+        isIndex:
+          type: boolean
+        isSorted:
+          type: boolean
+      type: object
+    MatcherSchema:
+      example:
+        multilineAndinvert: true
+        allOf:
+        - null
+        - null
+        regex: regex
+        field: field
+        formatMatchValue: formatMatchValue
+        defaultMatchValue: defaultMatchValue
+        name: name
+        anyOf:
+        - null
+        - null
+      properties:
+        name:
+          type: string
+        field:
+          type: string
+        regex:
+          type: string
+        formatMatchValue:
+          type: string
+        defaultMatchValue:
+          type: string
+        multilineAndinvert:
+          type: boolean
+        anyOf:
+          items:
+            $ref: '#/components/schemas/MatcherSchema'
+          type: array
+        allOf:
+          items:
+            $ref: '#/components/schemas/MatcherSchema'
+          type: array
+      type: object
+    ReaderSchema:
+      example:
+        series: series
+        name: name
+        format: TEXT
+        type: CONSOLE_STREAM
+      properties:
+        name:
+          type: string
+        series:
+          type: string
+        format:
+          enum:
+          - TEXT
+          - JSON
+          - XML
+          type: string
+        type:
+          enum:
+          - CONSOLE_STREAM
+          - FILE
+          - HTTP
+          type: string
+      type: object
+    ReapSchema:
+      example:
+        matchers:
+        - multilineAndinvert: true
+          allOf:
+          - null
+          - null
+          regex: regex
+          field: field
+          formatMatchValue: formatMatchValue
+          defaultMatchValue: defaultMatchValue
+          name: name
+          anyOf:
+          - null
+          - null
+        - multilineAndinvert: true
+          allOf:
+          - null
+          - null
+          regex: regex
+          field: field
+          formatMatchValue: formatMatchValue
+          defaultMatchValue: defaultMatchValue
+          name: name
+          anyOf:
+          - null
+          - null
+        readers:
+        - series: series
+          name: name
+          format: TEXT
+          type: CONSOLE_STREAM
+        - series: series
+          name: name
+          format: TEXT
+          type: CONSOLE_STREAM
+        feeders:
+        - reader: reader
+          name: name
+          description: description
+          isRegistered: true
+          matcher: matcher
+          targetSystem: targetSystem
+        - reader: reader
+          name: name
+          description: description
+          isRegistered: true
+          matcher: matcher
+          targetSystem: targetSystem
+        fields:
+        - name: name
+          isIndex: true
+          isSorted: true
+          type: STRING
+        - name: name
+          isIndex: true
+          isSorted: true
+          type: STRING
+      properties:
+        fields:
+          items:
+            $ref: '#/components/schemas/FieldSchema'
+          type: array
+        feeders:
+          items:
+            $ref: '#/components/schemas/FeederSchema'
+          type: array
+        matchers:
+          items:
+            $ref: '#/components/schemas/MatcherSchema'
+          type: array
+        readers:
+          items:
+            $ref: '#/components/schemas/ReaderSchema'
+          type: array
+      type: object
+    FetchRequest:
+      example:
+        select:
+          key: select
+        pageSize: 6
+        page: 0
+        filters:
+        - op: EQ
+          fieldName: fieldName
+          value: value
+        - op: EQ
+          fieldName: fieldName
+          value: value
+      properties:
+        page:
+          format: int32
+          type: integer
+        pageSize:
+          format: int32
+          type: integer
+        select:
+          additionalProperties:
+            type: string
+          type: object
+        filters:
+          items:
+            $ref: '#/components/schemas/LaganaFilter'
+          type: array
+      type: object
+    LaganaFilter:
+      example:
+        op: EQ
+        fieldName: fieldName
+        value: value
+      properties:
+        fieldName:
+          type: string
+        op:
+          enum:
+          - EQ
+          - NOTEQ
+          - CONTAINS
+          - NOTCONTAINS
+          - IN
+          - NOTIN
+          - EMPTY
+          - NOTEMPTY
+          - LT
+          - GT
+          - BETWEEN
+          - REGEX
+          type: string
+        value:
+          type: string
+      type: object
+    FetchResponse:
+      example:
+        payload:
+          totalResults: 5
+          totalPages: 1
+          pageSize: 6
+          page: 0
+          results:
+          - values:
+              key:
+              - vl: vl
+                fn: fn
+                ep: 2
+                sp: 5
+              - vl: vl
+                fn: fn
+                ep: 2
+                sp: 5
+          - values:
+              key:
+              - vl: vl
+                fn: fn
+                ep: 2
+                sp: 5
+              - vl: vl
+                fn: fn
+                ep: 2
+                sp: 5
+      properties:
+        payload:
+          $ref: '#/components/schemas/PaginatedLaganaSearchResult'
+      type: object
+    LaganaSearchResult:
+      example:
+        values:
+          key:
+          - vl: vl
+            fn: fn
+            ep: 2
+            sp: 5
+          - vl: vl
+            fn: fn
+            ep: 2
+            sp: 5
+      properties:
+        values:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/LaganaSearchResultValue'
+            type: array
+          type: object
+      type: object
+    LaganaSearchResultValue:
+      example:
+        vl: vl
+        fn: fn
+        ep: 2
+        sp: 5
+      properties:
+        fn:
+          type: string
+        vl:
+          type: string
+        sp:
+          format: int32
+          type: integer
+        ep:
+          format: int32
+          type: integer
+      type: object
+    PaginatedLaganaSearchResult:
+      example:
+        totalResults: 5
+        totalPages: 1
+        pageSize: 6
+        page: 0
+        results:
+        - values:
+            key:
+            - vl: vl
+              fn: fn
+              ep: 2
+              sp: 5
+            - vl: vl
+              fn: fn
+              ep: 2
+              sp: 5
+        - values:
+            key:
+            - vl: vl
+              fn: fn
+              ep: 2
+              sp: 5
+            - vl: vl
+              fn: fn
+              ep: 2
+              sp: 5
+      properties:
+        page:
+          format: int32
+          type: integer
+        pageSize:
+          format: int32
+          type: integer
+        totalPages:
+          format: int32
+          type: integer
+        totalResults:
+          format: int32
+          type: integer
+        results:
+          items:
+            $ref: '#/components/schemas/LaganaSearchResult'
+          type: array
+      type: object
+    ILaganaFieldOut:
+      example:
+        indexed: true
+        name: name
+        supportedOps:
+        - EQ
+        - EQ
+        type: STRING
+      properties:
+        name:
+          type: string
+        type:
+          enum:
+          - STRING
+          - NUMERIC
+          - BOOLEAN
+          - TIMESTAMP
+          - XML
+          - JSON
+          type: string
+        supportedOps:
+          items:
+            enum:
+            - EQ
+            - NOTEQ
+            - CONTAINS
+            - NOTCONTAINS
+            - IN
+            - NOTIN
+            - EMPTY
+            - NOTEMPTY
+            - LT
+            - GT
+            - BETWEEN
+            - REGEX
+            type: string
+          type: array
+        indexed:
+          type: boolean
+      type: object
+    Dashboard:
+      example:
+        id: id
+      properties:
+        id:
+          type: string
+      type: object
+    IFeederOverview:
+      example:
+        feederState: ACTIVE
+        name: name
+        targetSeries: targetSeries
+      properties:
+        name:
+          type: string
+        feederState:
+          enum:
+          - ACTIVE
+          - WARNING
+          - STOPPED
+          type: string
+        targetSeries:
+          type: string
+      type: object

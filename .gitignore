@@ -1,0 +1,5 @@
+.git/
+.idea/
+target/
+DATA/web/dev/node_modules/
+/src/main/webapp/src/api/gen/

@@ -1,0 +1,89 @@
+{
+	"info": {
+		"_postman_id": "6dff7e71-040a-44d1-aa3a-709906e5bba2",
+		"name": "Lagana",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/api/fetch",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"page\":1,\n    \"pageSize\":100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/fetch",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"fetch"
+					]
+				},
+				"description": "The search"
+			},
+			"response": []
+		},
+		{
+			"name": "{{host}}/api/feeder",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/feeder",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"feeder"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{host}}/api/feeder/:feederName/:action",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/feeder/:feederName/:action",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"feeder",
+						":feederName",
+						":action"
+					],
+					"variable": [
+						{
+							"key": "feederName",
+							"value": "DUMMY_FEEDER"
+						},
+						{
+							"key": "action",
+							"value": "start"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -1,0 +1,20 @@
+pre.body {
+    width: 100%;
+    display: block;
+    max-height: 500px;
+    overflow: auto;
+    margin: 0;
+    padding: 0 5px;
+    background: #F3F2F2;
+    background-image: -webkit-linear-gradient(#F3F2F2 50%, #EBEAEA 50%);
+    background-image:    -moz-linear-gradient(#F3F2F2 50%, #EBEAEA 50%);
+    background-image:     -ms-linear-gradient(#F3F2F2 50%, #EBEAEA 50%);
+    background-image:      -o-linear-gradient(#F3F2F2 50%, #EBEAEA 50%);
+    background-image:         linear-gradient(#F3F2F2 50%, #EBEAEA 50%);
+    background-position: 0 0;
+    background-repeat: repeat;
+    background-attachment: local;
+    background-size: 4em 4em;
+    line-height: 2em;
+    display: none;
+}

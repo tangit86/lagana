@@ -1,0 +1,164 @@
+{
+  "fields": [
+    {
+      "name": "xml-random",
+      "type": "XML",
+      "isIndex": false,
+      "isSorted": false
+    },
+    {
+      "name": "@content",
+      "type": "STRING",
+      "isIndex": false,
+      "isSorted": false
+    },
+    {
+      "name": "@timestamp",
+      "type": "TIMESTAMP",
+      "isIndex": false,
+      "isSorted": false
+    },
+    {
+      "name": "@source",
+      "type": "STRING",
+      "isIndex": true,
+      "isSorted": false
+    },
+    {
+      "name": "@series",
+      "type": "STRING",
+      "isIndex": false,
+      "isSorted": false
+    },
+    {
+      "name": "logType",
+      "type": "STRING",
+      "isIndex": true,
+      "isSorted": false
+    }
+  ],
+  "feeders": [
+    {
+      "name": "DUMMY_FEEDER",
+      "description": "A feederto feth from file for system DUMMY",
+      "targetSystem": "SYS1",
+      "reader": "CS_TAIL_LOCAL",
+      "matcher": "SYS1.EVENT_CONTENT_MATCHER_1",
+      "isRegistered": false
+    },
+    {
+      "name": "CONSOLE_FEEDER",
+      "description": "A feeder to fetch from SSH for system DUMMY",
+      "targetSystem": "SYS1",
+      "reader": "CS",
+      "matcher": "SYS1.EVENT_CONTENT_MATCHER_1",
+      "isRegistered": true
+    }
+  ],
+  "matchers": [
+    {
+      "name": "SYS1.EVENT_CONTENT_MATCHER_1",
+      "field": "@content",
+      "regex": "[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}(.*)",
+      "formatMatchValue": "$0",
+      "defaultMatchValue": null,
+      "multilineAndinvert": true,
+      "anyOf": [
+        "SYS1.LOG_TYPE",
+        "SYS1.XML1"
+      ],
+      "allOf": [
+        "SYS1.SOURCE_MATCHER",
+        "SYS1.TIMESTAMP_MATCHER_1",
+        "SYS1.SERIES"
+      ]
+    },
+    {
+      "name": "SYS1.EVENT_CONTENT_MATCHER",
+      "field": "@content",
+      "regex": "[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}(.*)",
+      "formatMatchValue": "$0",
+      "defaultMatchValue": null,
+      "multilineAndinvert": true,
+      "anyOf": [],
+      "allOf": [
+        "SYS1.SOURCE_MATCHER",
+        "SYS1.TIMESTAMP_MATCHER"
+      ]
+    },
+    {
+      "name": "SYS1.SOURCE_MATCHER",
+      "field": "@source",
+      "regex": null,
+      "formatMatchValue": null,
+      "defaultMatchValue": "SYS1",
+      "multilineAndinvert": false,
+      "anyOf": [],
+      "allOf": []
+    },
+    {
+      "name": "SYS1.SERIES",
+      "field": "@series",
+      "regex": null,
+      "formatMatchValue": null,
+      "defaultMatchValue": "SYS-local",
+      "multilineAndinvert": false,
+      "anyOf": [],
+      "allOf": []
+    },
+    {
+      "name": "SYS1.TIMESTAMP_MATCHER",
+      "field": "@timestamp",
+      "regex": "[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}",
+      "formatMatchValue": "yyyy-MM-dd HH:mm:ss,SSS",
+      "defaultMatchValue": null,
+      "multilineAndinvert": false,
+      "anyOf": [],
+      "allOf": []
+    },
+    {
+      "name": "SYS1.TIMESTAMP_MATCHER_1",
+      "field": "@timestamp",
+      "regex": "[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}",
+      "formatMatchValue": "yyyy-MM-dd HH:mm:ss.SSS",
+      "defaultMatchValue": null,
+      "multilineAndinvert": false,
+      "anyOf": [],
+      "allOf": []
+    },
+    {
+      "name": "SYS1.LOG_TYPE",
+      "field": "logType",
+      "regex": "[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}\\t\\t([A-Z]*)\\t",
+      "formatMatchValue": "$1",
+      "defaultMatchValue": null,
+      "multilineAndinvert": false,
+      "anyOf": [],
+      "allOf": []
+    },
+    {
+      "name": "SYS1.XML1",
+      "field": "xml-random",
+      "regex": "<xml>[\\s\\S]*?<\\/xml>",
+      "formatMatchValue": "$0",
+      "defaultMatchValue": null,
+      "multilineAndinvert": false,
+      "anyOf": [],
+      "allOf": []
+    }
+  ],
+  "readers": [
+    {
+      "name": "CS_TAIL_LOCAL",
+      "series": "/bin/sh,-c,tail -f /workspace/lagana1/DATA/dummy.log",
+      "format": "TEXT",
+      "type": "CONSOLE_STREAM"
+    },
+    {
+      "name": "CS",
+      "series": "/bin/sh,-c,ssh root@localhost \"tail -f /app/back/log\"",
+      "format": "TEXT",
+      "type": "CONSOLE_STREAM"
+    }
+  ]
+}
